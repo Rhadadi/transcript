@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Farsi Medical Transcriber</title>
+  <link rel="stylesheet" href="./static/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">SCRIBE V2 MEDICAL</div>
+        <h1>Farsi Medical Transcriber</h1>
+        <p>Low-quality Persian audio, English medical terminology, speaker diarization, and exact timestamps.</p>
+      </div>
+      <div id="health" class="status">Checking API…</div>
+    </section>
+
+    <section class="panel">
+      <h2>Server connection</h2>
+      <div class="grid">
+        <div class="field"><label for="backend">Backend URL</label><input id="backend" type="url" placeholder="https://your-server.example.com" /><small>Your transcription server. HTTPS required on GitHub Pages.</small></div>
+        <div class="field"><label for="accessToken">App access token</label><input id="accessToken" type="password" autocomplete="off" placeholder="Your private app token" /><small>Use APP_ACCESS_TOKEN from your server, never your ElevenLabs API key.</small></div>
+      </div>
+      <button id="connect" class="secondary" type="button">Connect</button>
+    </section>
+    <section class="panel">
+      <form id="form">
+        <div class="field wide">
+          <label for="file">Audio file</label>
+          <input id="file" name="file" type="file" accept="audio/*,.m4a,.mp3,.wav,.aac,.mp4,.mov" required />
+          <small>M4A, MP3, WAV, AAC and most other common audio/video formats.</small>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="language_code">Primary language</label>
+            <select id="language_code" name="language_code">
+              <option value="fas" selected>Persian / Farsi (fas)</option>
+              <option value="auto">Auto-detect</option>
+              <option value="eng">English (eng)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="num_speakers">Speakers, if known</label>
+            <input id="num_speakers" name="num_speakers" type="number" min="1" max="32" placeholder="e.g. 3" />
+          </div>
+        </div>
+
+        <div class="field wide">
+          <label for="keyterms">Medical terms / names</label>
+          <textarea id="keyterms" name="keyterms" rows="4" placeholder="leiomyosarcoma, IVC, inferior vena cava, retroperitoneal, pathology, metastasis"></textarea>
+          <small>Comma or line separated. Keyterm prompting costs extra, so use terms that really matter.</small>
+        </div>
+
+        <label class="checkline">
+          <input id="tag_audio_events" name="tag_audio_events" type="checkbox" />
+          Include laughter/noise/audio-event tags in the raw result
+        </label>
+
+        <button id="submit" type="submit">Transcribe audio</button>
+      </form>
+      <div id="progress" class="progress hidden">
+        <div class="spinner"></div>
+        <div>
+          <strong>Transcribing…</strong>
+          <div>Long recordings can take a while. Keep this tab open.</div>
+        </div>
+      </div>
+      <div id="error" class="error hidden"></div>
+    </section>
+
+    <section id="result" class="panel hidden">
+      <div class="result-head">
+        <div>
+          <div class="eyebrow">TRANSCRIPT</div>
+          <h2 id="resultTitle">Speaker-by-speaker</h2>
+        </div>
+        <div class="actions">
+          <button class="secondary" id="copyBtn" type="button">Copy transcript</button>
+          <button class="secondary" id="jsonBtn" type="button">Download JSON</button>
+        </div>
+      </div>
+
+      <div id="meta" class="meta"></div>
+      <audio id="player" controls></audio>
+      <div id="speakerNames" class="speaker-names"></div>
+      <div id="segments" class="segments" dir="rtl"></div>
+
+      <details>
+        <summary>Raw ElevenLabs transcript</summary>
+        <pre id="rawText" dir="auto"></pre>
+      </details>
+    </section>
+  </main>
+
+  <script src="./static/app.js"></script>
+</body>
+</html>
